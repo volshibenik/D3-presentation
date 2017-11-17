@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <title>Document</title>
+  <style>
+    p {
+      border: 1px  solid #000;
+    }
+  </style>
+</head>
+<body>
+  
+  <p>Magni quidem unde reprehenderit!</p>
+  <p class="bunny">Lorem ipsum dolor sit.</p>
+  <p>Eaque magnam voluptas a!</p>
+  <p>Placeat nemo hic corrupti.</p>
+  <script>
+    d3.select('.bunny').style('color', 'rgba(0,100,255,.78');
+    d3.selectAll('p').style('color', 'red'); //overrides
+    d3.selectAll('p').style('color', function () {
+      return `hsl(${Math.random() * 360},100%,50%)`
+    });
+    d3.selectAll('p').style('color', function (d,i) {
+      return i % 2 ?  'red' : 'blue'
+    });
+    d3.selectAll('p')
+      .data([200,100,150,0])
+        .style('color', function (data, ind) {
+          return `rgb(0,${data},${data})`
+        });
+    d3.selectAll('p')
+        .data([10,30,70,150])
+          .style('padding', function (data, i) {
+            return `${data}px`
+          });
+
+console.log();
+/* d3.select('body')
+.selectAll('p')
+.data([3,5,10,15,16,32])
+.enter().append('p').text(function (d) {
+  return `I'm number ${d}`
+}); */
+let dd = [1,2,3,4,5,6,7];
+var p = d3.select('body')
+  .selectAll('p')
+  .data(dd)
+    .text(function (d) {
+      return d;
+    });
+    p.enter().append('p')
+      .text(function (d) {
+        return d
+      });
+      dd.pop();
+      console.log(dd);
+      p.exit().remove()
+    console.log();
+    
+    
+          /*  */
+  </script>
+
+  <script>
+    function bind(func, context) {
+      return function() { // (*)
+        return func.apply(context, arguments);
+      };
+    }
+  </script>
+
+  
+ 
+
+  <script>
+      
+  </script>
+</body>
+</html>
