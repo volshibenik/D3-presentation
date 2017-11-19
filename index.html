@@ -1,83 +1,534 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <script src="https://d3js.org/d3.v4.min.js"></script>
-  <title>Document</title>
-  <style>
-    p {
-      border: 1px  solid #000;
-    }
-  </style>
-</head>
-<body>
-  
-  <p>Magni quidem unde reprehenderit!</p>
-  <p class="bunny">Lorem ipsum dolor sit.</p>
-  <p>Eaque magnam voluptas a!</p>
-  <p>Placeat nemo hic corrupti.</p>
-  <script>
-    d3.select('.bunny').style('color', 'rgba(0,100,255,.78');
-    d3.selectAll('p').style('color', 'red'); //overrides
-    d3.selectAll('p').style('color', function () {
-      return `hsl(${Math.random() * 360},100%,50%)`
-    });
-    d3.selectAll('p').style('color', function (d,i) {
-      return i % 2 ?  'red' : 'blue'
-    });
-    d3.selectAll('p')
-      .data([200,100,150,0])
-        .style('color', function (data, ind) {
-          return `rgb(0,${data},${data})`
-        });
-    d3.selectAll('p')
-        .data([10,30,70,150])
-          .style('padding', function (data, i) {
-            return `${data}px`
-          });
 
-console.log();
-/* d3.select('body')
-.selectAll('p')
-.data([3,5,10,15,16,32])
-.enter().append('p').text(function (d) {
-  return `I'm number ${d}`
-}); */
-let dd = [1,2,3,4,5,6,7];
-var p = d3.select('body')
-  .selectAll('p')
-  .data(dd)
-    .text(function (d) {
-      return d;
-    });
-    p.enter().append('p')
-      .text(function (d) {
-        return d
-      });
-      dd.pop();
-      console.log(dd);
-      p.exit().remove()
-    console.log();
-    
-    
-          /*  */
-  </script>
+	<head>
+		<meta charset="utf-8">
 
-  <script>
-    function bind(func, context) {
-      return function() { // (*)
-        return func.apply(context, arguments);
-      };
-    }
-  </script>
+		<title>D3.js</title>
 
-  
- 
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
 
-  <script>
-      
-  </script>
-</body>
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/beige.css" id="theme">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+		<script src="https://d3js.org/d3.v3.min.js"></script>
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>D3.js</h1>
+					<h3>Visualize it, baby!</h3>
+					<p>
+						<small>Created by <a href="http://github.com/volshibenik">Siarhei Sayevich</a></small>
+					</p>
+					<aside class="notes">
+						Hi! My name is Sergey and today I would like to talk to you about data visualisation, and in particular about D3.js library.
+						But why data visualisation is so important? 
+						Well, because we get most of the information about world around us through sight, we learn much faster through text with pictures,
+						rather than just text, and we memorize more and do it better.
+						So, what is D3, exactly? D3 stands for Data Driven Documents. And indeed, it is a javascript library for manipulating documents based on data.
+						Basically, it's an object with a bunch of methods inside.	And when i say bunch, i actually mean a whole lot)). 
+						But anyway, D3 is built on top of web standarts, makes use of modern HTML, CSS, SVG and Canvas,	doesn't use any proprietary framework.
+						So, what does it do? It let's you bind data to DOM and then manipulate DOM elements based on that data.
+					</aside>
+				</section>
+				<!-- <section>
+					<style>
+						.intro-body {
+							font-size: 10px;
+						}
+					</style>
+					<h2>Intro</h2>
+					
+					<div class="intro-body"></div>
+					<div class="intro-text"></div>
+					<script>
+
+					var w = 600,                        //width
+					h = 500,                            //height
+					r = 200,                            //radius
+					color = d3.scale.category20c();     //builtin range of colors
+
+					data = [{"label":"NYC", "value":8550405}, 
+									{"label":"Tokio", "value":13241000}, 
+									{"label":"London", "value":10549500},
+									{"label":"Shanghai", "value":24256800}
+									];
+
+					var vis = d3.select(".intro-body")
+							.append("svg:svg")              //create the SVG element inside the <body>
+							.data([data])                   //associate our data with the document
+									.attr("width", w)           //set the width and height of our visualization (these will be attributes of the <svg> tag
+									.attr("height", h)
+							.append("svg:g")                //make a group to hold our pie chart
+									.attr("transform", "translate(" + r + "," + r + ")")    //move the center of the pie chart from 0, 0 to radius, radius
+
+					var arc = d3.svg.arc()              //this will create <path> elements for us using arc data
+							.outerRadius(r);
+
+					var pie = d3.layout.pie()           //this will create arc data for us given a list of values
+							.value(function(d) { return d.value; });    //we must tell it out to access the value of each element in our data array
+
+					var arcs = vis.selectAll("g.slice")     //this selects all <g> elements with class slice (there aren't any yet)
+							.data(pie)                          //associate the generated pie data (an array of arcs, each having startAngle, endAngle and value properties) 
+							.enter()                            //this will create <g> elements for every "extra" data element that should be associated with a selection. The result is creating a <g> for every object in the data array
+									.append("svg:g")                //create a group to hold each slice (we will have a <path> and a <text> element associated with each slice)
+											.attr("class", "slice");    //allow us to style things in the slices (like text)
+
+							arcs.append("svg:path")
+											.attr("fill", function(d, i) { return color(i); } ) //set the color for each slice to be chosen from the color function defined above
+											.attr("d", arc);                                    //this creates the actual SVG path using the associated data (pie) with the arc drawing function
+
+							arcs.append("svg:text")                                     //add a label to each slice
+											.attr("transform", function(d) {                    //set the label's origin to the center of the arc
+											//we have to make sure to set these before calling arc.centroid
+											d.innerRadius = 0;
+											d.outerRadius = r;
+											return "translate(" + arc.centroid(d) + ")";        //this gives us a pair of coordinates like [50, 50]
+									})
+									.attr("text-anchor", "middle")                          //center the text on it's origin
+									.text(function(d, i) { return data[i].label; });        //get the label from our original data array
+					</script>
+				</section> -->
+				<section>
+					<section class="slide slide-colors">
+						<aside class="notes">
+							Say, you have a data, an array of colors, and you want to paint some boring article of text. 
+							So that every paragraph will have it's own color. With D3, there is nothing simplier! I will just press this button, ok?
+							If i press this, i will bind same data to letters of our heading. I wrapped every of them in span for the purpose of this demo.
+							Notice that I have fewer paragraphs than colors but more letters. Let's take a look at the code.
+						</aside>
+						<style>
+							.colors-list {
+								list-style-type: none !important;
+								margin: 0 !important;
+								width: 90% !important;
+							}
+
+							.colors-list pre {
+								margin: 0 !important;
+							}
+							
+							button {
+								padding: 12px;
+								border-radius: 7px;
+								background-color: goldenrod;
+								color: #fff;
+								font-size: 1em;
+								margin-top: 20px!important;
+								border: 3px solid #ddd ;
+								cursor: pointer;
+								outline: none;
+							}
+							.article-color  {
+								margin-top: 20px!important;
+								background-color: rgba(0,0,0,.7);
+								width: 90% !important;
+								color: #eee;
+							}
+							.para-color {
+								display: inline-block;
+							}
+					
+						</style>
+						<h2 class="rainbow-title"><span>C</span><span>o</span><span>l</span><span>o</span><span>r</span><span>s</span>
+							<span>a</span><span>r</span><span>r</span><span>a</span><span>y</span></h2>
+						<ul class="colors-list" >
+							<li class="fragment" ><pre><code class="hljs" data-trim>let rainbowArr = 
+['crimson','coral','gold','lime','turquoize','navy','orchid']</code></pre>	</li>
+							<li class="fragment">
+								<article class="article-color">
+								<p class="para-color">I am...</p>
+								<p class="para-color">super...</p>
+								<p class="para-color">borin'...</p>
+								<p class="para-color">text...</p>
+							</article></li>
+							<li class="fragment btn-color">&hellip;<button onclick="colorize()">press me!</button></li>
+							<li class="fragment btn-color">&hellip;<button onclick="coloTitle()">and me!</button></li>
+						</ul>
+						<script>
+							var colors;
+							let rainbowArr = ['crimson','coral','gold','lime','lightblue','navy','orchid'];
+							function colorize() {
+							
+								
+								colors = d3.select('.article-color').selectAll('p')
+									.data(rainbowArr)
+										.style('color', d => d);
+								/* colors.enter().append('p').text(function (d,i) {
+									console.log(d,i);
+									
+									if (i===4) return 'not';
+									
+								}).style('color', d=>d) */
+							}
+							function coloTitle() {
+								d3.select('.rainbow-title').selectAll('span')
+								.data(rainbowArr)
+								.transition()
+								.duration(750)
+								.delay(function(d, i) { return i * 300; })
+									.style('color', d => d);
+							}
+
+						</script>
+					</section>
+					<section>
+						<aside class="notes">
+								So, when we linked D3 to our site, first of all, to use it we just type d3, followed by method that we wanna use. 
+								Okay, selecta and select all are called selections. As you probably guessed already, they select DOM elements. First one selects
+								first element on the page with class title, second one selects forms a selection of all span elements inside this element with class title.
+								Important thing is that all d3 methods are chainable and you use them like this, just type one after another.
+								Okay, now most important part. Dot data is used to bind an object of data to a selection. There are various kind of objects
+								that can be used, arrays, JSON, object themselves et cetera.
+								When data is bound to a selection, each element in the data array is paired with the corresponding node in the selection.
+								Next couple of lines make transition effect. Also notice, how easy it is made with D3. Let's take a closer look at last two. 
+								See a function here. It is a callback function, just like in .map or .filter array methods and it accepts 2 arguments. First is 
+								a piece of data in data object and second is a number of element in selection. It is common practice to use 'd' and 'i' here.
+						</aside>
+						<h2>D3 basics</h2>
+						<ul class="colors-list" >
+							<li class="fragment1" ><pre><code class="hljs" data-trim>let rainbowArr = 
+['pink','coral','gold','lime','turquoize','navy','orchid']</code></pre>	</li></ul>
+						<ul class="colors-list" >
+							<li class="fragment">
+								<pre><code class="hljs" data-trim>d3.select('.title').selectAll('span')</code></pre>	</li>
+								
+							<li class="fragment">
+							<pre><code class="hljs" data-trim> .data(rainbowArr)</code></pre>	</li>
+							<li class="fragment">
+							<pre><code class="hljs" data-trim> .transition()</code></pre>	</li>
+							<li class="fragment">
+							<pre><code class="hljs" data-trim> .duration(750)</code></pre>	</li>
+							<li class="fragment">
+							<pre><code class="hljs" data-trim> .delay(function(d, i) { return i * 300; })</code></pre>	</li>
+							<li class="fragment">
+							<pre><code class="hljs" data-trim> .style('color', function(d){return d})</code></pre>	</li>
+						</ul>
+					</section>
+
+				</section>
+
+
+				<section>
+						<section class="slide slide-bar">
+						<aside class="notes">
+							And here is a simplest possible bar chart. And it's code
+						</aside>
+								<h2>Bar chart</h2>
+								<style>
+									.bar {
+										width: 400px;
+										height: 500px;
+									}
+									.bar-descr {
+										max-height: 900px !important
+									}
+								</style>
+								<svg class="bar"></svg>
+								
+								<script>
+									var rectWidth = 50;
+									var height = 300;
+									var data = [50,120,100,30,200];
+									var svg = d3.select('.bar');
+		
+									var enter = svg.selectAll('rect')
+										.data(data).enter().append('rect')
+										.attr('x', (d,i) => i *rectWidth)
+										.attr('y', d => height - d)
+										.attr('width', rectWidth)
+										.attr('height', d => d)
+										.attr('fill', 'coral')
+										.attr('stroke', '000')
+		
+								</script>
+							</section>
+							<section>
+								<aside class="notes">
+									All we need to biuld it is data. No DOM elements this time. 
+									First we create and append an svg element to our body.
+									
+									Then we select all rect elements inside svg, even though there are none;
+									Then we bind our data and D3 creates like placeholders for each data element. 
+									And after that we append rect elements to our svg, and number of rect D3 will create will be equal to number of data pieces in our array.
+									And then we just add attributes to these rectangles, like widht, height and position. And that's basically it!
+									A couple of lines of code.
+									Ofc, chart can be much much more elaborate, there are functions that add axis, determine range etc, etc. Actually let's take a look at API.
+									Shocking, isn't it? Yeah, it might look terrifiyng at first glance, but fear not! I just wanted to show you that possibilities of this library
+									are almost infinite!
+									Just let me show you some cool examples what you can build
+								</aside>
+								<div class="bar-descr">
+															<p><pre><code class="hljs bar-descr" data-trim>
+								
+								let svg = d3.select('body').append('svg');
+		
+								let data = [50,120,100,30,200];
+		
+								let rectWidth = 50;
+		
+								let height = 300;
+		
+								let enter = svg.selectAll('rect')
+								.data(data).enter().append('rect')
+								.attr('x', (d,i) => i *rectWidth)
+								.attr('y', d => height - d)
+								.attr('width', rectWidth)
+								.attr('height', d => d)
+								.attr('fill', 'coral')
+								.attr('stroke', '000')
+																</code></pre></p>
+		
+														</div>
+							</section>
+				</section>
+				
+
+
+
+
+
+
+
+
+
+
+
+
+
+				<section class="slide slide-polar" data-background="#222">
+					<aside class="notes">
+						this is kinda polar axis clock. Takes Data object as it's data.
+						And it changes color depeding of current angle of arc.
+					</aside>
+					<div class="polar" style="height:800px; position:relative; top:-80px;"></div>
+					<style>
+	
+					.arc-text {
+						font: 16px sans-serif;
+					}
+					.arc-center {
+						fill: none;
+					}
+					#credit {
+						position: absolute;
+						font: 10px sans-serif;
+						right: 10px;
+						bottom: 10px;
+						color: #ddd;
+					}
+					#credit a {
+						color: inherit;
+					}
+					</style>
+					<script src="polar-clock.js"></script>
+				</section>
+
+		
+				<section>
+					<section  class="slide slide-sort" title="Sort">
+						<aside class="notes">
+							This one represents visualisation of merge sort algorithm. 
+						</aside>
+							<h2>MergeSort algorithm</h2>
+							<div class="merge-sort"></div>
+							
+							<style>
+							.line {
+								stroke: #000;
+								stroke-width: 3px;
+								stroke-linecap: round;
+							}
+							.line--pivot {
+								stroke: #f00;
+								stroke-width: 2.5px;
+							}
+							.line--inactive {
+								stroke: #ddd;
+								stroke-width: 1px;
+							}
+							</style>
+							<script src="merge.js"></script>
+							<button class="kk" onclick="merge()">MergeSort</button>
+					</section>
+					<!-- <section>
+						<h2>Basement Level 1</h2>
+						<div class="merge-sort"></div>
+						<script src="merge.js"></script>
+
+						<button class="kk" onclick="merge()">merge</button>
+					</section> -->
+					<!-- <section>
+						<h2>Basement Level 2</h2>
+						<p>That's it, time to go back up.</p>
+						<br>
+						<a href="#/2">
+							<img width="178" height="238" data-src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Up arrow" style="transform: rotate(180deg); -webkit-transform: rotate(180deg);">
+						</a>
+					</section> -->
+				</section>
+
+				<section class="slide slide-tree">
+					<aside class="notes">
+						This is an example of data tree.
+						Okay, now maybe if you're a little tired, let us take a moment to meditate together.
+					</aside>
+					<style>
+
+					.node {
+						cursor: pointer;
+					}
+
+					.node circle {
+						fill: #fff;
+						stroke: steelblue;
+						stroke-width: 3px;
+					}
+
+					.node text {
+						font: 12px sans-serif;
+					}
+
+					.link {
+						fill: none;
+						stroke: #ccc;
+						stroke-width: 2px;
+					}
+					.tree-body {
+						height: 900px;
+						position: absolute;
+						width: 1px;
+						top: 20%;
+					}
+						</style>
+
+					<div class="tree-body"></div>
+					<button onclick="treeJS()">Plant a tree</button>
+					<script src="tree.js"></script>
+				</section>
+
+				<section>
+					<aside class="notes"></aside>
+					<style>
+						form {
+							position: absolute;
+							top: 1em;
+							left: 1em;
+						}
+
+						.gears-body path {
+							fill-rule: evenodd;
+							stroke: #333;
+							stroke-width: 2px;
+						}
+
+						.gears-body .sun path {
+							fill: #6baed6;
+						}
+
+						.gears-body .planet path {
+							fill: #9ecae1;
+						}
+
+						.gears-body .annulus path {
+							fill: #c6dbef;
+						}
+					</style>
+					<h2>Relaxation</h2>
+					<div class="gears-body"></div>
+					<form>
+						<input type="radio" name="reference" id="ref-annulus">
+						<label for="ref-annulus">Annulus</label><br>
+						<input type="radio" name="reference" id="ref-planet" checked>
+						<label for="ref-planet">Planets</label><br>
+						<input type="radio" name="reference" id="ref-sun">
+						<label for="ref-sun">Sun</label>
+					</form>
+					<script src="gears.js"></script>
+					<script>gearsJS();</script>
+				</section>
+
+				<section>
+					<aside class="notes">
+						So, why D3.js is good? First of all it's free and open source, it has huge community, 
+						so you can get help for pretty much any question you have and also massive gallery of works for inspiration
+						There is a high probability, that thing you want to make has been already invented. 
+						It's worth mentioning that there is version 4 released, which means library is quite mature. It was created in 2011. 
+						And as it's still there, it certainly says something.
+						It is lightweight, unpacked version is just 200Kb, so may be important when you build high performance web application
+						And I hope that i managed to show you, how elegant but capable it is. And that is all i wanted to say you today. Thanks for your time and bye bye
+					</aside>
+					<h2>Advantages of D3</h2>
+					<p class="fragment">It's free and open-source</p>
+					<p class="fragment">Huge community</p>
+					<p class="fragment">&hellip;and gallery for inspiration</p>
+					<p class="fragment">Mature(V4)</p>
+					<p class="fragment">Just 200Kb unpacked</p>
+					<p class="fragment">Elegant and super powerful</p>
+				</section>
+
+				
+
+
+			
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/d3.js/d3js.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
 </html>
